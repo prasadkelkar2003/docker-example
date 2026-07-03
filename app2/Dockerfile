@@ -1,7 +1,7 @@
 # Builds a Docker image to run docker-example-app2.  The base image will handle
 # adding any application files and required dependencies to this image.
 #
-FROM lbracken/flask-uwsgi
+FROM prasadkelkar2003/flask-uwsgi
 MAINTAINER Levi Bracken <levi.bracken@gmail.com>
 
 # Create a symlink with a unique name to the Flask app's static resources.
