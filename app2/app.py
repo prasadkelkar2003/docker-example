@@ -5,7 +5,7 @@ from flask import Flask
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/app2/")
 def home():
     # Modern Docker resolves container names via internal DNS. 
     # We fallback to 'mongo' if no explicit environment variable is set.
