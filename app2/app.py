@@ -7,27 +7,25 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-
-    # Docker will set the address of the linked MongoDB container in the following
-    # environmental variable.  We already know the port that MongoDB is exposed on.
-    db_host = str(os.environ["DB_PORT_27017_TCP_ADDR"])
+    # Modern Docker resolves container names via internal DNS. 
+    # We fallback to 'mongo' if no explicit environment variable is set.
+    db_host = os.environ.get("MONGO_HOST", "mongo")
     db_port = 27017
 
-    # Get a connection to MongoDB, then get the collection 'webStats' from the
-    # database 'app2Db'.
+    # Connect to MongoDB using the MongoClient
     client = pymongo.MongoClient(db_host, db_port)
     collection = client["app2Db"]["webStats"]
 
-    # Increment the hit count for the page 'home' by one.
-    collection.update({"_id":"home"},{"$inc":{"hit_count":1}}, True)
+    # Modern PyMongo uses update_one and explicit upsert=True keyword argument
+    collection.update_one({"_id": "home"}, {"$inc": {"hit_count": 1}}, upsert=True)
 
     # Read the value of the hit counter
-    hit_count = collection.find_one({"_id":"home"})["hit_count"]
+    res = collection.find_one({"_id": "home"})
+    hit_count = res["hit_count"] if res else 0
 
     return """<h1>This is app2!</h1>
               <p>Hit Count: %d </p>
               <img src='static/images/flask-badge-2.png'/>""" % (hit_count)
 
-
 if __name__ == '__main__':
-    app.run() 
+    app.run()
