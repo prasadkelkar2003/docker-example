@@ -25,7 +25,7 @@ def home():
 
     return """<h1>This is app2!</h1>
               <p>Hit Count: %d </p>
-              <img src='static/images/sec-badge.avif'/>""" % (hit_count)
+              <img src='static/images/sec-badge.png'/>""" % (hit_count)
 
 if __name__ == '__main__':
     app.run()
